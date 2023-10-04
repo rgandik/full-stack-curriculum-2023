@@ -1,0 +1,41 @@
+body {
+    font-family: "Calibri", sans-serif;
+}
+
+#headshot {
+    display: flex;
+    align-items: center;
+}
+
+.role {
+    font-style: italic;
+    
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 110%;
+}
+
+.date {
+    flex-direction: row-reverse;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1%;
+}
+
+h2 {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
