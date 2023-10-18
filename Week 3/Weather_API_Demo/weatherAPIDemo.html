@@ -17,18 +17,13 @@
 </body>
 
 <script>
-<<<<<<< HEAD
 		const apiKey = "";
-=======
-		const apiKey = "";
->>>>>>> upstream/main
 
 		let temp;
 		let lat;
 		let lon;
 
 		function getData() {
-<<<<<<< HEAD
 			let apiCall = `http://api.openweathermap.org/geo/1.0/direct?appid=${apiKey}&q=Jaco,CR&limit=5`;
 			
 			fetch(apiCall)
@@ -42,21 +37,17 @@
 					renderLatLon();
 					getTemp();
 				})
-=======
-			let apiCall = ``;
->>>>>>> upstream/main
 			// get lat and long
 			// get temp
 		}
 
 		function renderLatLon() {
-<<<<<<< HEAD
 			document.querySelector('#lat').innerText = 'Lat: ' + lat;
 			document.querySelector('#lon').innerText = 'Lon: ' + lon;
 		}
 
 		function getTemp() {
-			let apiCall = 'api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial';
+			let apiCall = `api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
 
 			fetch(apiCall)
 				.then((response) =>
@@ -67,21 +58,10 @@
 					temp = data.main.temp;;
 					renderTemp();
 				})
-=======
 		}
 
-		function getTemp() {
-			
->>>>>>> upstream/main
-		}
-
-        
 		function renderTemp() {
-<<<<<<< HEAD
 			document.querySelector('#temp').innerText = 'Temp: ' + temp;
-=======
-		
->>>>>>> upstream/main
 		}
 	</script>
 </html>
