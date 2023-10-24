@@ -47,7 +47,7 @@
 		}
 
 		function getTemp() {
-			let apiCall = `api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+			let apiCall = `api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
 
 			fetch(apiCall)
 				.then((response) =>
@@ -60,7 +60,6 @@
 				})
 		}
 
-        
 		function renderTemp() {
 			document.querySelector('#temp').innerText = 'Temp: ' + temp;
 		}
