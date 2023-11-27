@@ -13,13 +13,34 @@
       <div>
           <label for="item">Enter a new item:</label>
           <input type="text" name="item" id="item">
-          <button>Add item</button>
+          <button onclick="createListItem()">Add item</button>
       </div>
 
       <ul id="Shopping-List"></ul>
     </div>
 
     <script>
+      
+      //pull localStorage into list
+      let shoppingList = JSON.parse(localStorage.getItem("shoppingList"))
+
+      if (!shoppingList) {
+        shoppingList = []
+      } else {
+        shoppingList.forEach(item => {
+          addItem(item)
+        })
+      }
+
+      function createListItem() {
+
+        const input = document.querySelector("#item")
+        console.log(input.value)
+
+        addItem(input.value)
+        input.value = ""
+        input.focus()
+      }
 
       //conveniently done for you!
       function addItem(text) {
@@ -40,6 +61,30 @@
         li.appendChild(deleteButton);
         li.appendChild(saveButton);
         
+        //delete button functionality
+        deleteButton.addEventListener("click", () => {
+          list.removeChild(li)
+
+          shoppingList = shoppingList.filter((item) => item != span.innerText)
+          localStorage.setItem("shoppingList", JSON.stringify(shoppingList))
+        })
+
+        //save button functionality
+        saveButton.addEventListener("click", () => {
+          console.log("Saved")
+
+          const itemExists = shoppingList.filter((item) => item === text).length > 0
+          if (!itemExists) {
+            //update list
+            shoppingList.push(text)
+
+            //set localStorage
+            localStorage.setItem("shoppingList", JSON.stringify(shoppingList))
+          } else {
+            console.log("Item already exists")
+          }
+          console.log(localStorage)
+        })
       }
 
     </script>
