@@ -10,6 +10,15 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
+			<span id='date'>[Day of Week] [Day]</span>
+			<br>
+			<span id='location'>Weather for [City], [State]</span>
+			<br>
+			<span id='cover'>[Cover]</span>
+			<br>
+			<span id='currentTemp'>[currentTemp]</span>
+			<br>
+			<span id='AQI'>[AQI]</span>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -23,7 +32,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "83a79dc131856e311ea1cdc207c2997c";
+		const apiKey = "7f6b86cd598717316f96abd5f0eca1d0";
 
         // variable that stores the city that is chosen
 		let city;
@@ -102,6 +111,48 @@
 			//printing the city object to the console
 			console.log(city);
             // BEGIN CODING HERE
+			pullWeather()
+			pullAQI()
+		}
+
+		// function to pull weather data from OpenWeather API
+		function pullWeather() {
+				let apiWeather = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
+
+				fetch(apiWeather)
+					.then((response) =>
+						response.json
+					)
+					.then((data) => {
+						weather = data
+						console.log("Weather successfully pulled")
+						displayWeather()
+					})
+		}
+
+		// function to pull air quality data from OpenWeather API
+		function pullAQI() {
+				let apiAQI = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+
+				fetch(apiAQI)
+					.then((response) =>
+						response.json
+					)
+					.then((data) => {
+						aqi = data
+						console.log("AQI successfully pulled")
+						displayAQI()
+					})
+		}
+
+		// function to display weather data
+		function displayWeather() {
+			
+		}
+
+		// function to display AQI data
+		function displayAQI() {
+
 		}
 	</script>
 </html>
