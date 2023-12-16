@@ -10,15 +10,16 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
-			<span id='date'>[Day of Week] [Day]</span>
+			<span id='date'></span>
 			<br>
-			<span id='location'>Weather for [City], [State]</span>
+			<span id='location'></span>
 			<br>
-			<span id='cover'>[Cover]</span>
+			<span id='cover'></span>
+			<img id='coverVisual'>
 			<br>
-			<span id='currentTemp'>[currentTemp]</span>
+			<span id='currentTemp'></span>
 			<br>
-			<span id='AQI'>[AQI]</span>
+			<span id='AQI'></span>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -121,13 +122,48 @@
 
 				fetch(apiWeather)
 					.then((response) =>
-						response.json
+						response.json()
 					)
 					.then((data) => {
 						weather = data
-						console.log("Weather successfully pulled")
+						//console.log("Weather successfully pulled")
 						displayWeather()
+						displayForecast()
 					})
+		}
+
+		// function to display current weather data
+		function displayWeather() {
+			document.querySelector('#date').innerText = formatDate()
+			document.querySelector('#location').innerText = "Weather for " + city.name + ", " + city.state
+			document.querySelector('#cover').innerText = weather.list[0].weather[0].main
+			//console.log(weather.list[0].weather[0].main)
+			document.querySelector('#coverVisual').src = `icons/${weather.list[0].weather[0].icon}.svg`
+			document.querySelector('#coverVisual').alt = weather.list[0].weather[0].description + " icon"
+			//console.log(weather.list[0].weather[0].icon)
+			document.querySelector('#currentTemp').innerText = Math.round(weather.list[0].main.temp) + "°"
+			//console.log(weather.list[0].main.temp)
+		}
+
+		// function to display weather forecast data
+		function displayForecast() {
+
+			for(let i = 0; i < weather.list.length; i+=8) {
+				let forecastContainer = document.createElement('div')
+
+				forecastContainer.innerHTML = `
+					<span>${formatDate(i/8+1)}</span>
+					<img src="icons/${weather.list[i].weather[0].icon}.svg" alt="${weather.list[i].weather[0].description} icon">
+					<span>${Math.round(weather.list[i].main.temp)}°</span>
+					`
+				//Only provided forecast temp for the day (not min to max) because min to max is not available for all days/locations
+				//Code below can be substituted for forecast temp code to include min to max temps
+				//<span>${weather.list[i].main.temp_min}° to ${weather.list[i].main.temp_max}°</span>
+
+				//console.log(weather.list[i].main.temp)
+
+				document.querySelector('#weather-container').appendChild(forecastContainer)
+			}
 		}
 
 		// function to pull air quality data from OpenWeather API
@@ -136,23 +172,19 @@
 
 				fetch(apiAQI)
 					.then((response) =>
-						response.json
+						response.json()
 					)
 					.then((data) => {
 						aqi = data
-						console.log("AQI successfully pulled")
+						//console.log("AQI successfully pulled")
 						displayAQI()
 					})
 		}
 
-		// function to display weather data
-		function displayWeather() {
-			
-		}
-
 		// function to display AQI data
 		function displayAQI() {
-
+			document.querySelector('#AQI').innerText = "AQI: " + aqi.list[0].main.aqi
+			//console.log(aqi.list[0].main.aqi)
 		}
 	</script>
 </html>
