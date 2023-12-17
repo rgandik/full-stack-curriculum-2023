@@ -22,6 +22,7 @@
 					<img id='cover-visual'>
 				</div>
 			</div>
+			<div id='forecast-container'></div>
 		</div>
 	</div>
 	<div id='side-container'>
@@ -35,7 +36,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "7f6b86cd598717316f96abd5f0eca1d0";
+		const apiKey = "";
 
         // variable that stores the city that is chosen
 		let city;
@@ -149,15 +150,12 @@
 
 		// function to display weather forecast data
 		function displayForecast() {
+			let forecastContainer = document.getElementById('forecast-container')
+			forecastContainer.innerHTML = null
 
-			let forecastContainer = document.createElement('div')
-			forecastContainer.setAttribute('id', 'forecast-container')
-			console.log(forecastContainer.className)
-			document.querySelector('#weather-container').appendChild(forecastContainer)
-
-			for(let i = 0; i < weather.list.length; i+=8) {
+			for (let i = 0; i < weather.list.length; i+=8) {
 				let forecastBox = document.createElement('div')
-				forecastBox.setAttribute('id', 'forecast-box')
+				forecastBox.setAttribute('class', 'forecast-box')
 
 				forecastBox.innerHTML = `
 					<span>${formatDate(i/8+1)}</span>
