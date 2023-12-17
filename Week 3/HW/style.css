@@ -34,8 +34,42 @@
   #weather-container {
     height: 60%;
     width: 90%;
+    font-weight: bold;
   }
-  
+
+  .cover {
+    display: flex;
+    align-items: center;
+  }
+
+  #current-temp {
+    font-size: 500%;
+  }
+
+  img {
+    height: 90%;
+    width: 90%;
+  }
+
+  #cover-visual {
+    height: 30%;
+    width: 30%;
+  }
+
+  #forecast-container {
+    display: flex;
+    justify-content: space-between;
+    
+  }
+
+  #forecast-box {
+    text-align: center;
+    padding-top: 2%;
+    padding-bottom: 4%;
+    margin: 1%;
+    background-color: #ffffff;
+  }
+
   #side-container {
     height: 100%;
     width: 34%;

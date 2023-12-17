@@ -10,22 +10,24 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
-			<span id='date'></span>
-			<br>
-			<span id='location'></span>
-			<br>
-			<span id='cover'></span>
-			<img id='coverVisual'>
-			<br>
-			<span id='currentTemp'></span>
-			<br>
-			<span id='AQI'></span>
-		</div> 
+			<div id='weather-header'>
+				<h3 id='date'></h3>
+				<h1 id='location'></h1>
+				<div class='cover'>
+					<div>
+						<h2 id='cover-label'></h2>
+						<h1 id='current-temp'></h1>
+						<span id='aqi'></span>
+					</div>
+					<img id='cover-visual'>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id='side-container'>
 		<div>
-			<input id='search-input' placeholder='search for a city'></input>
-			<button id='search-button' onclick="search()">search</button>
+			<input id='search-input' placeholder='Search for a city'></input>
+			<button id='search-button' onclick="search()">Search</button>
 		</div>
 		<ul id='search-results-list'></ul>
 	</div>
@@ -33,7 +35,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "7f6b86cd598717316f96abd5f0eca1d0";
 
         // variable that stores the city that is chosen
 		let city;
@@ -136,33 +138,39 @@
 		function displayWeather() {
 			document.querySelector('#date').innerText = formatDate()
 			document.querySelector('#location').innerText = "Weather for " + city.name + ", " + city.state
-			document.querySelector('#cover').innerText = weather.list[0].weather[0].main
+			document.querySelector('#cover-label').innerText = weather.list[0].weather[0].main
 			//console.log(weather.list[0].weather[0].main)
-			document.querySelector('#coverVisual').src = `icons/${weather.list[0].weather[0].icon}.svg`
-			document.querySelector('#coverVisual').alt = weather.list[0].weather[0].description + " icon"
+			document.querySelector('#cover-visual').src = `icons/${weather.list[0].weather[0].icon}.svg`
+			document.querySelector('#cover-visual').alt = weather.list[0].weather[0].description + " icon"
 			//console.log(weather.list[0].weather[0].icon)
-			document.querySelector('#currentTemp').innerText = Math.round(weather.list[0].main.temp) + "°"
+			document.querySelector('#current-temp').innerText = Math.round(weather.list[0].main.temp) + "°"
 			//console.log(weather.list[0].main.temp)
 		}
 
 		// function to display weather forecast data
 		function displayForecast() {
 
-			for(let i = 0; i < weather.list.length; i+=8) {
-				let forecastContainer = document.createElement('div')
+			let forecastContainer = document.createElement('div')
+			forecastContainer.setAttribute('id', 'forecast-container')
+			console.log(forecastContainer.className)
+			document.querySelector('#weather-container').appendChild(forecastContainer)
 
-				forecastContainer.innerHTML = `
+			for(let i = 0; i < weather.list.length; i+=8) {
+				let forecastBox = document.createElement('div')
+				forecastBox.setAttribute('id', 'forecast-box')
+
+				forecastBox.innerHTML = `
 					<span>${formatDate(i/8+1)}</span>
 					<img src="icons/${weather.list[i].weather[0].icon}.svg" alt="${weather.list[i].weather[0].description} icon">
 					<span>${Math.round(weather.list[i].main.temp)}°</span>
 					`
 				//Only provided forecast temp for the day (not min to max) because min to max is not available for all days/locations
 				//Code below can be substituted for forecast temp code to include min to max temps
-				//<span>${weather.list[i].main.temp_min}° to ${weather.list[i].main.temp_max}°</span>
+				//<span>${Math.round(weather.list[i].main.temp_min)}° to ${Math.round(weather.list[i].main.temp_max)}°</span>
 
 				//console.log(weather.list[i].main.temp)
 
-				document.querySelector('#weather-container').appendChild(forecastContainer)
+				document.querySelector('#forecast-container').appendChild(forecastBox)
 			}
 		}
 
@@ -183,7 +191,7 @@
 
 		// function to display AQI data
 		function displayAQI() {
-			document.querySelector('#AQI').innerText = "AQI: " + aqi.list[0].main.aqi
+			document.querySelector('#aqi').innerText = "AQI: " + aqi.list[0].main.aqi
 			//console.log(aqi.list[0].main.aqi)
 		}
 	</script>
