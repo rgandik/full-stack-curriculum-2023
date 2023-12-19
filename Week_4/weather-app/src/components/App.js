@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/App.css'; // Import the CSS file for App
 
 import MainContainer from './MainContainer';
 import SideContainer from './SideContainer';
 
-const apiKey = ''; // Your OpenWeatherMap API key here
+const apiKey = '7f6b86cd598717316f96abd5f0eca1d0'; // Your OpenWeatherMap API key here
 
 function App() {
   /*
@@ -17,6 +17,7 @@ function App() {
   function (e.g., 'setSelectedCity'). The initial state can be an empty object or null.
   */
   
+  const [selectedCity, setSelectedCity] = useState();
   
   /*
   STEP 2: Create a function to update the city data in the state.
@@ -26,6 +27,13 @@ function App() {
   state of the selected city. This function will be passed to SideContainer as a prop.
   */
   
+  function changeSelectedCity(city) {
+    setSelectedCity(city);
+  }
+
+  useEffect(() => {
+    console.log(selectedCity);
+  }, [selectedCity])
   
   return (
     <div className="app-container">
@@ -39,8 +47,8 @@ function App() {
       allows MainContainer to display the weather for the selected city.
       */}
       
-      <MainContainer apiKey={apiKey} /* Pass the selected city data as props to 'MainContainer' */ />
-      <SideContainer apiKey={apiKey} /* Pass the city data update function as a prop to 'SideContainer' */ />
+      <MainContainer apiKey={apiKey} /* Pass the selected city data as props to 'MainContainer' */ selectedCity={selectedCity} />
+      <SideContainer apiKey={apiKey} /* Pass the city data update function as a prop to 'SideContainer' */ setSelectedCity={changeSelectedCity} />
     </div>
   );
 }

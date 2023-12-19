@@ -29,6 +29,8 @@ function MainContainer(props) {
   null or an empty object.
   */
   
+  const [weather, setWeather] = useState();
+  const [aqi, setAQI] = useState();
   
   /*
   STEP 3: Fetch Weather Data When City Changes.
@@ -44,6 +46,65 @@ function MainContainer(props) {
   in your state.
   */
   
+  function pullWeather() {
+    if (props.selectedCity) {
+      /* Uses OpenWeather's "5 day weather forecast" API instead of One Call API, which results
+			in only 4 forecasted (non-current) days instead of 5 as shown in the Figma example */
+			let apiWeather = `https://api.openweathermap.org/data/2.5/forecast?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}&units=imperial`;
+
+			fetch(apiWeather)
+				.then((response) =>
+					response.json()
+				)
+				.then((data) => {
+					setWeather(data);
+					console.log("Weather successfully pulled")
+					// Calls the functions that render the current and forecasted weather data, respectively
+					//displayWeather()
+					//displayForecast()
+				})
+        .catch(error => {
+          console.error(error)
+        })
+    } else {
+      console.log("App rendered");
+    }
+  }
+
+  function pullAQI() {
+    if(props.selectedCity) {
+      let apiAQI = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}`;
+
+      fetch(apiAQI)
+        .then((response) =>
+          response.json()
+        )
+        .then((data) => {
+          setAQI(data);
+          console.log("AQI successfully pulled")
+          // Calls function that renders current AQI data
+          //displayAQI()
+        })
+        .catch(error => {
+          console.error(error);
+        })
+    } else {
+      console.log("App rendered")
+    }
+  }
+
+  useEffect(() => {
+    pullWeather();
+    pullAQI();
+  }, [props.selectedCity])
+
+  useEffect(() => {
+    console.log(weather);
+  }, [weather])
+
+  useEffect(() => {
+    console.log(aqi);
+  }, [aqi])
   
   return (
     <div id="main-container">
