@@ -40,8 +40,10 @@
 
         // variable that stores the city that is chosen
 		let city;
-        // variable that stores the weather and forecast for the city
+        // variable that stores the current weather for the city
 		let weather;
+		// Variable that stores the forecast for the city
+		let forecast;
         // the variable that stores the air quality index for the city
 		let aqi;
 
@@ -51,7 +53,7 @@
 			var date = new Date();
 			date.setDate(date.getDate() + daysFromNow);
 			output += date.toLocaleString('en-US', { weekday: 'long' }).toUpperCase()
-			// Adds the month after the day of the week to the current date
+			// Adds the month after the day of the week to the current date (daysFromNow = 0)
 			if (!daysFromNow) {
 				output += ', ' + date.toLocaleString('en-US', { month: 'long'}).toUpperCase()
 			}
@@ -119,16 +121,15 @@
 			//printing the city object to the console
 			console.log(city);
             // BEGIN CODING HERE
-			// Calls the functions that fetch (GET) weather and AQI data from their respective APIs
+			// Calls the functions that fetch (GET) weather, forecast, and AQI data from their respective APIs
 			pullWeather()
+			pullForecast()
 			pullAQI()
 		}
 
-		// Function that pulls current and forecasted weather data from OpenWeather
+		// Function that pulls current weather data from OpenWeather
 		function pullWeather() {
-			/* Uses OpenWeather's "5 day weather forecast" API instead of One Call API, which results
-			in only 4 forecasted (non-current) days instead of 5 as shown in the Figma example */
-			let apiWeather = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
+			let apiWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
 
 			fetch(apiWeather)
 				.then((response) =>
@@ -137,9 +138,8 @@
 				.then((data) => {
 					weather = data
 					console.log("Weather successfully pulled")
-					// Calls the functions that render the current and forecasted weather data, respectively
+					// Calls the function that renders the current weather data
 					displayWeather()
-					displayForecast()
 				})
 		}
 
@@ -147,11 +147,27 @@
 		function displayWeather() {
 			document.querySelector('#date').innerText = formatDate()
 			document.querySelector('#location').innerText = "Weather for " + city.name + ", " + city.state
-			document.querySelector('#cover-label').innerText = weather.list[0].weather[0].main
-			document.querySelector('#cover-visual').src = `icons/${weather.list[0].weather[0].icon}.svg`
+			document.querySelector('#cover-label').innerText = weather.weather[0].main
+			document.querySelector('#cover-visual').src = `icons/${weather.weather[0].icon}.svg`
 			// Provides alt text matching the missing image if the appropriate svg file is not stored in the icons folder
-			document.querySelector('#cover-visual').alt = weather.list[0].weather[0].description + " icon"
-			document.querySelector('#current-temp').innerText = Math.round(weather.list[0].main.temp) + "°"
+			document.querySelector('#cover-visual').alt = weather.weather[0].description + " icon"
+			document.querySelector('#current-temp').innerText = Math.round(weather.main.temp) + "°"
+		}
+
+		// Function that pulls forecasted weather data from OpenWeather
+		function pullForecast() {
+			let apiWeather = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
+
+			fetch(apiWeather)
+				.then((response) =>
+					response.json()
+				)
+				.then((data) => {
+					forecast = data
+					console.log("Forecast successfully pulled")
+					// Calls the function that renders the forecasted weather data
+					displayForecast()
+				})
 		}
 
 		// Function that renders forecasted weather data
@@ -159,21 +175,21 @@
 			// Clears contents of forecast-container to prevent prior weather forecasts still displaying on successive searches
 			let forecastContainer = document.getElementById('forecast-container')
 			forecastContainer.innerHTML = null
-			// Generates 4 forecasts, each at 24 hour (3 hour*8) intervals starting 24 hours from the current weather data
-			for (let i = 8; i < weather.list.length; i+=8) {
+			// Generates 5 forecasts, each at 24 hour (3 hour*8) intervals starting 24 hours from the current weather data
+			for (let i = 0; i < forecast.list.length; i+=8) {
 				// Assigns each forecast the forecast-box class so they can share formatting (CSS)
 				let forecastBox = document.createElement('div')
 				forecastBox.setAttribute('class', 'forecast-box')
 				// Creates contents of each forecast by pulling data from the weather variable based on # of iteration through for loop
 				/* Only provides average forecasted temp for the day (not min to max as shown in Figma example)
 				because min to max temp is not available for all times using the "5 day weather forecast" API;
-				the code below can be substituted for line 174 to display min to max temps, but it will  return
+				the code below can be substituted for line 188 to display min to max temps, but it will  return
 				average daily temp for both values if no min and/or max exists
 				<span>${Math.round(weather.list[i].main.temp_min)}° to ${Math.round(weather.list[i].main.temp_max)}°</span> */
 				forecastBox.innerHTML = `
-					<span>${formatDate(i/8)}</span>
-					<img src="icons/${weather.list[i].weather[0].icon}.svg" alt="${weather.list[i].weather[0].description} icon">
-					<span>${Math.round(weather.list[i].main.temp)}°</span>`
+					<span>${formatDate((i+8)/8)}</span>
+					<img src="icons/${forecast.list[i].weather[0].icon}.svg" alt="${forecast.list[i].weather[0].description} icon">
+					<span>${Math.round(forecast.list[i].main.temp)}°</span>`
 				// Adds each forecast-box element to the forecast-container parent before generating the next one so order is preserved
 				document.querySelector('#forecast-container').appendChild(forecastBox)
 			}
