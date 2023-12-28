@@ -4,7 +4,8 @@ import '../styles/App.css'; // Import the CSS file for App
 import MainContainer from './MainContainer';
 import SideContainer from './SideContainer';
 
-const apiKey = '7f6b86cd598717316f96abd5f0eca1d0'; // Your OpenWeatherMap API key here
+// Assign valid OpenWeather API Key to apiKey to run app
+const apiKey = '';
 
 function App() {
   /*
@@ -30,10 +31,6 @@ function App() {
   function changeSelectedCity(city) {
     setSelectedCity(city);
   }
-
-  useEffect(() => {
-    console.log(selectedCity);
-  }, [selectedCity])
   
   return (
     <div className="app-container">
