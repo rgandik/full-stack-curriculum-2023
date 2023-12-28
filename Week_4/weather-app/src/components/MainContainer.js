@@ -35,15 +35,16 @@ function MainContainer(props) {
   */
   
 
-  // State variables that store data from APIs for the weather (current and forecasted) and AQI
+  // State variables that store data from APIs for the current weather, forecast, and AQI
   const [weather, setWeather] = useState();
+  const [forecast, setForecast] = useState();
   const [aqi, setAQI] = useState();
   
   /*const [forecastState, setForecastState] = useState();
   let forecastIterations = []
   useEffect(() => {
-    if (weather) {
-      for (let i = 8; i < weather.list.length; i+=8){
+    if (forecast) {
+      for (let i = 0; i < weather.list.length; i+=8){
         forecastIterations = [...forecastIterations, i]
       }
       console.log(forecastIterations)
@@ -51,8 +52,9 @@ function MainContainer(props) {
     }
   }, [weather])*/
 
-  // Array used to generate forecast boxes using map function
-  let forecastIterations = [8, 16, 24, 32]
+  /* Array used to generate forecast boxes using map function;
+  5 forecasts, each at 24 hour (3 hour*8) intervals */
+  let forecastIterations = [0, 8, 16, 24, 32]
   
   /*
   STEP 3: Fetch Weather Data When City Changes.
@@ -68,15 +70,12 @@ function MainContainer(props) {
   in your state.
   */
 
-  // useEffect function that calls weather and AQI APIs whenever the city selected in SideContainer changes
+  // useEffect function that calls APIs for weather, forecast, and AQI whenever the city selected in SideContainer changes
   useEffect(() => {
     // APIs are only called once valid city data exists (NOT on initial page render)
     if (props.selectedCity) {
-      // Pulls current and forecasted weather data from OpenWeather
-      /* Uses OpenWeather's "5 day weather forecast" API instead of One Call API, which results
-			in only 4 forecasted (non-current) days instead of 5 as shown in the Figma example because
-      the first of the 5 days is the current day */
-			let apiWeather = `https://api.openweathermap.org/data/2.5/forecast?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}&units=imperial`;
+      // Pulls current weather data from OpenWeather
+      let apiWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}&units=imperial`;
 
 			fetch(apiWeather)
 				.then((response) => response.json())
@@ -84,6 +83,18 @@ function MainContainer(props) {
 					// Sets weather variable to pulled data
           setWeather(data);
 					console.log("Weather successfully pulled")
+				})
+        .catch(error => {console.error(error)})
+      
+      // Pulls forecasted weather data from OpenWeather
+			let apiForecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}&units=imperial`;
+
+			fetch(apiForecast)
+				.then((response) => response.json())
+				.then((data) => {
+					// Sets forecast variable to pulled data
+          setForecast(data);
+					console.log("Forecast successfully pulled")
 				})
         .catch(error => {console.error(error)})
       
@@ -124,25 +135,24 @@ function MainContainer(props) {
           <h1>Weather for {props.selectedCity.name}, {props.selectedCity.state}</h1>
           <div className="cover">
             <div>
-              <h2>{weather.list[0].weather[0].main}</h2>
-              <h1 id="current-temp">{Math.round(weather.list[0].main.temp)}°</h1>
+              <h2>{weather.weather[0].main}</h2>
+              <h1 id="current-temp">{Math.round(weather.main.temp)}°</h1>
               <h3>AQI: {aqi.list[0].main.aqi}</h3>
             </div>
-            <img id="cover-visual" src={require(`../icons/${weather.list[0].weather[0].icon}.svg`)} alt={`${weather.list[0].weather[0].description} icon`}/>
+            <img id="cover-visual" src={require(`../icons/${weather.weather[0].icon}.svg`)} alt={`${weather.weather[0].description} icon`}/>
           </div>
         </>}
 
-        {/* Forecast boxes are only genereated once weather variable is not null; renders forecast
-        boxes by mapping forecastIterations variable to WeatherCard component*/}
-        {weather && //forecastState &&
+        {/* Forecast boxes are only genereated once forecast variable is not null; renders forecast
+        boxes by mapping forecastIterations variable to WeatherCard component */}
+        {forecast && //forecastState &&
         <>
           <div id="forecast-container">
             {/* Uses forecastIterations array elements and their indices to generate individual
             forecast box data */}
-            {forecastIterations.map((iteration, index) => <WeatherCard key={index} date={formatDate(++index)} weather={weather.list[iteration]} />)}
+            {forecastIterations.map((iteration, index) => <WeatherCard key={index} date={formatDate(++index)} forecast={forecast.list[iteration]} />)}
           </div>
         </>}
-
       </div>
     </div>
   );

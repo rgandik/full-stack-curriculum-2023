@@ -156,9 +156,9 @@
 
 		// Function that pulls forecasted weather data from OpenWeather
 		function pullForecast() {
-			let apiWeather = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
+			let apiForecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}&units=imperial`;
 
-			fetch(apiWeather)
+			fetch(apiForecast)
 				.then((response) =>
 					response.json()
 				)
@@ -183,9 +183,9 @@
 				// Creates contents of each forecast by pulling data from the weather variable based on # of iteration through for loop
 				/* Only provides average forecasted temp for the day (not min to max as shown in Figma example)
 				because min to max temp is not available for all times using the "5 day weather forecast" API;
-				the code below can be substituted for line 188 to display min to max temps, but it will  return
-				average daily temp for both values if no min and/or max exists
-				<span>${Math.round(weather.list[i].main.temp_min)}° to ${Math.round(weather.list[i].main.temp_max)}°</span> */
+				the code in line 192 can be substituted with line 188 to display min to max temps, but it will
+				return average daily temp for both values if no min and/or max exists
+				<span>${Math.round(forecast.list[i].main.temp_min)}° to ${Math.round(forecast.list[i].main.temp_max)}°</span> */
 				forecastBox.innerHTML = `
 					<span>${formatDate((i+8)/8)}</span>
 					<img src="icons/${forecast.list[i].weather[0].icon}.svg" alt="${forecast.list[i].weather[0].description} icon">
