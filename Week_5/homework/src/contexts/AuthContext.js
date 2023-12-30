@@ -15,28 +15,29 @@ export const useAuth = () => {
 // It uses the context to provide authentication-related data and functions to its children components.
 export function AuthProvider({ children }) {
     const navigate = useNavigate();
-    const [currentUster, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem('user')));
+    const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem('user')));
     const [loginError, setLoginError] = useState(null);
     
-    const VALID_USERNAME = "rishG"
-    const VALID_PASSWORD = "foobar"
+    const VALID_USERNAME = "rishi"
+    const VALID_PASSWORD = "securePassword"
 
     // Login function that validates the provided username and password.
-    const login = (usernmae, password) => {
+    const login = (username, password) => {
         if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+            setLoginError()
             setCurrentUser({username})
             localStorage.setItem('user', JSON.stringify({username}))
             navigate("/")
         } else {
-            setLoginError("Error")
+            setLoginError("Invalid username or password")
         }
     };
 
     // Logout function to clear user data and redirect to the login page.
     const logout = () => {
         setCurrentUser(null)
-            localStorage.removeItem('user')
-            navigate("/login")
+        localStorage.removeItem('user')
+        navigate("/login")
     };
 
     // An object containing our state and functions related to authentication.
