@@ -37,7 +37,7 @@ export default function HomePage() {
       navigate("/login")
     // Otherwise, pulls (GETS) all tasks for currentUser
     } else {
-      fetch(`https://tpeo-todo.vercel.app/tasks/${currentUser.username}`)
+      fetch(`http://localhost:3001/tasks/${currentUser.username}`)
       .then((response) => response.json())
       .then((response) => {
         // Creates an array to store the set of objects (tasks)
@@ -62,7 +62,7 @@ export default function HomePage() {
       // to the API to add a new task and then update the state based on the response.
 
       // Sends a POST request to add the new task to the database
-      fetch("https://tpeo-todo.vercel.app/tasks", {
+      fetch(`http://localhost:3001/tasks`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -109,7 +109,7 @@ export default function HomePage() {
     // When a task has been marked finished, sends a request to DELETE the task from the database using its id
     tasks.forEach((task) => {
       if (task.finished /*&& task.id === id*/) {
-        fetch(`https://tpeo-todo.vercel.app/tasks/${task.id}`, {
+        fetch(`http://localhost:3001/tasks/${task.id}`, {
           method: "DELETE"
         })
         .catch((error) => {console.error(error)})
