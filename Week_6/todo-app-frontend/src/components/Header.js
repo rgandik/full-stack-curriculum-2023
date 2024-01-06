@@ -19,7 +19,7 @@ function Header() {
     >
       <Toolbar>
         <Typography variant="h4" sx={{ flexGrow: 1 }} fontWeight='bold'>
-          {currentUser ? `${currentUser.username}'s To-Do List` : "Guest's To-Do List"}
+          {currentUser ? `${currentUser.email}'s To-Do List` : "Guest's To-Do List"}
         </Typography>
         <Button
           onClick={logout}

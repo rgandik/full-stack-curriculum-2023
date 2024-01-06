@@ -37,7 +37,7 @@ export default function HomePage() {
       navigate("/login")
     // Otherwise, pulls (GETS) all tasks for currentUser
     } else {
-      fetch(`http://localhost:3001/tasks/${currentUser.username}`)
+      fetch(`http://localhost:3001/tasks/${currentUser.email}`)
       .then((response) => response.json())
       .then((response) => {
         // Creates an array to store the set of objects (tasks)
@@ -69,7 +69,7 @@ export default function HomePage() {
           },
           body: JSON.stringify({
             // The user is set to the username of the logged in (currentUser) as a string
-            "user": currentUser.username,
+            "user": currentUser.email,
             // The task is set to taskName, which is pulled from the input field at function call
             "task": taskName,
             "finished": false
