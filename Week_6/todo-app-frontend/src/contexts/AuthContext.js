@@ -10,6 +10,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
+// Project-specific configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCUbcCmGm97Pli3KP0kp-ulC2RkJrYx1is",
     authDomain: "tpeo-64846.firebaseapp.com",
@@ -43,28 +44,14 @@ export function AuthProvider({ children }) {
     const register = (email, password) => {
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+            // Resets the loginError variable so it is not visible after logging out
+            setLoginError()
             setCurrentUser(userCredential.user);
             // correct and formal way of getting access token
             userCredential.user.getIdToken().then((accessToken) => {
-                console.log(accessToken)
+                //console.log(accessToken)
             })
-            navigate("/");
-        })
-        .catch((error) => {
-            setLoginError(error.message);
-        });
-    };
-    
-    /*const VALID_USERNAME = "rishi"
-    const VALID_PASSWORD = "securePassword"*/
-
-    // Sign in existing users
-    const login = (email, password) => {
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            setCurrentUser(userCredential.user);
-            // this method of retrieving access token also works
-            //console.log(userCredential.user.accessToken)
+            // Sets user in localStorage so login can persist between webpage reloads
             localStorage.setItem('user', JSON.stringify({email}))
             navigate("/");
         })
@@ -73,33 +60,33 @@ export function AuthProvider({ children }) {
         });
     };
 
-    // Login function that validates the provided username and password.
-    /*const login = (username, password) => {
-        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+    // Sign in existing users
+    const login = (email, password) => {
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Resets the loginError variable so it is not visible after logging out
             setLoginError()
-            setCurrentUser({username})
-            localStorage.setItem('user', JSON.stringify({username}))
-            navigate("/")
-        } else {
-            setLoginError("Invalid username or password")
-        }
-    };*/
+            setCurrentUser(userCredential.user);
+            // this method of retrieving access token also works
+            //console.log(userCredential.user.accessToken)
+            // Sets user in localStorage so login can persist between webpage reloads
+            localStorage.setItem('user', JSON.stringify({email}))
+            navigate("/");
+        })
+        .catch((error) => {
+            setLoginError(error.message);
+        });
+    };
 
     // Sign out users
     const logout = () => {
         auth.signOut().then(() => {
         setCurrentUser(null);
+        // Sets user in localStorage to null
         localStorage.removeItem('user')
         navigate("/login");
         });
     };
-
-    // Logout function to clear user data and redirect to the login page.
-    /*const logout = () => {
-        setCurrentUser(null)
-        localStorage.removeItem('user')
-        navigate("/login")
-    };*/
 
     // An object containing our state and functions related to authentication.
     // By using this context, child components can easily access and use these without prop drilling.

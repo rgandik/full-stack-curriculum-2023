@@ -61,9 +61,9 @@ function LoginPage() {
             required
             fullWidth
             id="username"
-            label="Username"
+            label="Email"
             InputLabelProps={{ shrink: true }}
-            placeholder="admin"
+            placeholder="username@email.com"
             autoFocus
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -77,7 +77,7 @@ function LoginPage() {
             type="password"
             id="password"
             InputLabelProps={{ shrink: true }}
-            placeholder="racecar"
+            placeholder="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -96,7 +96,7 @@ function LoginPage() {
             fullWidth
             variant="contained"
             color="primary"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt:1, mb: 2 }}
             onClick={handleRegistration}
           >
             Register

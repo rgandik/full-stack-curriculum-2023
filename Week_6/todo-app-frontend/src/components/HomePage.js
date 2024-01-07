@@ -66,6 +66,10 @@ export default function HomePage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            /* Passes "Authorization" key-value pair in header containing Bearer token pulled from currentUser
+            variable to allow access to secure API calls (like POST); since state variables reset on webpage reload,
+            currentUser.accessToken will be empty after reloading the page so the call will fail */
+            "Authorization": "Bearer " + currentUser.accessToken
           },
           body: JSON.stringify({
             // The user is set to the username of the logged in (currentUser) as a string
@@ -78,8 +82,10 @@ export default function HomePage() {
         .then((response) => response.json())
         // Appends the task to the list of previous tasks using the data returned from the server (including id)
         .then((data) => {
-          setTasks([...tasks, { id: data.id, user: data.user, name: data.task, finished: data.finished}])
-          console.log(data.task + " has been added")
+          if (data.id) {
+            setTasks([...tasks, { id: data.id, user: data.user, name: data.task, finished: data.finished}])
+            //console.log(data.task + " has been added")
+          }
         })
         .catch((error) => {console.error(error)})
         // Clears taskName after the new task is POSTed
@@ -110,10 +116,16 @@ export default function HomePage() {
     tasks.forEach((task) => {
       if (task.finished /*&& task.id === id*/) {
         fetch(`http://localhost:3001/tasks/${task.id}`, {
-          method: "DELETE"
+          method: "DELETE",
+          headers: {
+            /* Passes "Authorization" key-value pair in header containing Bearer token pulled from currentUser
+            variable to allow access to secure API calls (like POST); since state variables reset on webpage reload,
+            currentUser.accessToken will be empty after reloading the page so the call will fail */
+            "Authorization": "Bearer " + currentUser.accessToken
+          }
         })
         .catch((error) => {console.error(error)})
-        console.log(task.name + " has been deleted")
+        //console.log(task.name + " has been deleted")
       }
     })
   }, [tasks])
