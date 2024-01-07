@@ -19,7 +19,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   // Imports the global state variable currentUser
-  const { currentUser } = useAuth();
+  const { currentUser, authToken } = useAuth();
   
   // State to hold the list of tasks.
   const [tasks, setTasks] = useState([]);
@@ -66,10 +66,9 @@ export default function HomePage() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            /* Passes "Authorization" key-value pair in header containing Bearer token pulled from currentUser
-            variable to allow access to secure API calls (like POST); since state variables reset on webpage reload,
-            currentUser.accessToken will be empty after reloading the page so the call will fail */
-            "Authorization": "Bearer " + currentUser.accessToken
+            /* Passes "Authorization" key-value pair in header containing Bearer token pulled from authToken
+            variable to allow access to secure API calls (like POST) */
+            "Authorization": "Bearer " + authToken.accessToken
           },
           body: JSON.stringify({
             // The user is set to the username of the logged in (currentUser) as a string
@@ -119,9 +118,8 @@ export default function HomePage() {
           method: "DELETE",
           headers: {
             /* Passes "Authorization" key-value pair in header containing Bearer token pulled from currentUser
-            variable to allow access to secure API calls (like POST); since state variables reset on webpage reload,
-            currentUser.accessToken will be empty after reloading the page so the call will fail */
-            "Authorization": "Bearer " + currentUser.accessToken
+            variable to allow access to secure API calls (like POST) */
+            "Authorization": "Bearer " + authToken.accessToken
           }
         })
         .catch((error) => {console.error(error)})

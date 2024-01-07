@@ -38,6 +38,7 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(() => JSON.parse(localStorage.getItem('user')));
+    const [authToken, setAuthToken] = useState(() => JSON.parse(localStorage.getItem('accessToken')))
     const [loginError, setLoginError] = useState(null);
     
     // Sign up new users
@@ -47,9 +48,12 @@ export function AuthProvider({ children }) {
             // Resets the loginError variable so it is not visible after logging out
             setLoginError()
             setCurrentUser(userCredential.user);
+            setAuthToken(userCredential.user)
             // correct and formal way of getting access token
             userCredential.user.getIdToken().then((accessToken) => {
                 //console.log(accessToken)
+                // Sets accessToken in localStorage so protected calls can be made even after webpage reloads
+                localStorage.setItem('accessToken', JSON.stringify({accessToken}))
             })
             // Sets user in localStorage so login can persist between webpage reloads
             localStorage.setItem('user', JSON.stringify({email}))
@@ -67,8 +71,12 @@ export function AuthProvider({ children }) {
             // Resets the loginError variable so it is not visible after logging out
             setLoginError()
             setCurrentUser(userCredential.user);
-            // this method of retrieving access token also works
-            //console.log(userCredential.user.accessToken)
+            setAuthToken(userCredential.user)
+            userCredential.user.getIdToken().then((accessToken) => {
+                //console.log(accessToken)
+                // Sets accessToken in localStorage so protected calls can be made even after webpage reloads
+                localStorage.setItem('accessToken', JSON.stringify({accessToken}))
+            })
             // Sets user in localStorage so login can persist between webpage reloads
             localStorage.setItem('user', JSON.stringify({email}))
             navigate("/");
@@ -82,8 +90,10 @@ export function AuthProvider({ children }) {
     const logout = () => {
         auth.signOut().then(() => {
         setCurrentUser(null);
-        // Sets user in localStorage to null
+        setAuthToken(null)
+        // Sets user and accessToken in localStorage to null
         localStorage.removeItem('user')
+        localStorage.removeItem('accessToken')
         navigate("/login");
         });
     };
@@ -92,6 +102,7 @@ export function AuthProvider({ children }) {
     // By using this context, child components can easily access and use these without prop drilling.
     const contextValue = {
         currentUser,
+        authToken,
         register,
         login,
         logout,

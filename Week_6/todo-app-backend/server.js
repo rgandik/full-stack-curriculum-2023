@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const admin = require("firebase-admin");
 
 // Creating an instance of Express
 const app = express();
