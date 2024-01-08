@@ -21,6 +21,8 @@ export default function HomePage() {
   // Imports the global state variable currentUser
   const { currentUser, authToken } = useAuth();
   
+  const backendURL = process.env.REACT_APP_BACKEND;
+
   // State to hold the list of tasks.
   const [tasks, setTasks] = useState([]);
   // State for the task name being entered by the user.
@@ -37,7 +39,7 @@ export default function HomePage() {
       navigate("/login")
     // Otherwise, pulls (GETS) all tasks for currentUser
     } else {
-      fetch(`http://localhost:3001/tasks/${currentUser.email}`)
+      fetch(`${backendURL}/tasks/${currentUser.email}`)
       .then((response) => response.json())
       .then((response) => {
         // Creates an array to store the set of objects (tasks)
@@ -62,7 +64,7 @@ export default function HomePage() {
       // to the API to add a new task and then update the state based on the response.
 
       // Sends a POST request to add the new task to the database
-      fetch(`http://localhost:3001/tasks`, {
+      fetch(`${backendURL}/tasks`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -114,7 +116,7 @@ export default function HomePage() {
     // When a task has been marked finished, sends a request to DELETE the task from the database using its id
     tasks.forEach((task) => {
       if (task.finished /*&& task.id === id*/) {
-        fetch(`http://localhost:3001/tasks/${task.id}`, {
+        fetch(`${backendURL}/tasks/${task.id}`, {
           method: "DELETE",
           headers: {
             /* Passes "Authorization" key-value pair in header containing Bearer token pulled from currentUser
