@@ -99,7 +99,7 @@ function MainContainer(props) {
         .catch(error => {console.error(error)})
       
       // Pulls AQI data from OpenWeather
-      let apiAQI = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}`;
+      let apiAQI = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${props.selectedCity.lat}&lon=${props.selectedCity.lon}&appid=${props.apiKey}`;
 
       fetch(apiAQI)
         .then((response) => response.json())
