@@ -6,7 +6,6 @@ import SideContainer from './SideContainer';
 
 // Assign valid OpenWeather API Key to apiKey to run app
 const apiKey = process.env.REACT_APP_API_KEY;
-console.log(apiKey)
 
 function App() {
   /*
